@@ -1,9 +1,16 @@
 #!/bin/bash
 
-#This script tries to use existing proprietory NVIDIA drivers.
-#Update the default OS and Version based on availability on "http://developer.download.nvidia.com/compute/cuda/repos/"
+#Abort installation if any of the commands fail
+set -e
+
+#This script tries to use existing proprietory NVIDIA drivers.In case of other OS-Version combo, please update the default values with valid values and script should work as expected.
+
+#Update the default OS and Version based on availability on "http://developer.download.nvidia.com/compute/cuda/repos/" and "http://developer.download.nvidia.com/compute/machine-learning/repos"
 default_os_name="ubuntu"
 default_os_version="1804"
+default_ppa_driver_version="nvidia-driver-440"
+default_cuda_version="cuda-10-1"
+deafult_libcudn_version="libcudnn7"
 
 #Extract OS Name from /etc/os-release
 os_name=$(cat /etc/os-release | grep ID= | grep -Po 'ID=\K[^ ]+' | grep '[a-zA-Z]')

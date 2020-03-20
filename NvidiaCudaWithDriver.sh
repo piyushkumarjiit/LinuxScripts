@@ -1,10 +1,18 @@
 #!/bin/bash
 
+#Abort installation if any of the commands fail
+set -e
+
+#This script uses PPA repo for proprietory NVIDIA drivers. In case of other OS-Version combo, please update the default values with valid values and script should work as expected.
+
+#Update the default OS and Version based on availability on "http://developer.download.nvidia.com/compute/cuda/repos/" and "http://developer.download.nvidia.com/compute/machine-learning/repos"
 default_os_name="ubuntu"
 default_os_version="1804"
 default_ppa_driver_version="nvidia-driver-440"
 default_cuda_version="cuda-10-1"
 deafult_libcudn_version="libcudnn7"
+
+
 
 #Extract OS Name from /etc/os-release
 os_name=$(cat /etc/os-release | grep ID= | grep -Po 'ID=\K[^ ]+' | grep '[a-zA-Z]')
@@ -24,6 +32,8 @@ rm ~/rebooting
 
 
 else
+#Before Restart step/ Initial installation
+echo "Initializing..."
 
 #Cleanup old binaries/installs
 sudo rm /etc/apt/sources.list.d/cuda*
@@ -52,8 +62,6 @@ else
 	echo "Url : Falling to default:"$url
 fi
 echo "Key URL:"$url
-#sudo apt-key adv --fetch-keys  http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub
-#sudo apt-key adv --fetch-keys  "http://developer.download.nvidia.com/compute/cuda/repos/"$os_name$os_version"/x86_64/7fa2af80.pub"
 sudo apt-key adv --fetch-keys $url
 
 #Add cuda repo to cuda.list
@@ -67,8 +75,6 @@ else
 	echo "Url : Falling to default:"$url
 fi
 echo "CUDA URL:"$url
-#sudo bash -c 'echo "deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64 /" > /etc/apt/sources.list.d/cuda.list'
-#sudo bash -c 'echo "deb http://developer.download.nvidia.com/compute/cuda/repos/"$os_name$os_version"/x86_64 /" > /etc/apt/sources.list.d/cuda.list'
 sudo bash -c "echo deb "$url" / > /etc/apt/sources.list.d/cuda.list"
 
 #Add machine learning repo to cuda_learn.list
@@ -81,8 +87,6 @@ else
 	echo "Url : Falling to default:"$url
 fi
 echo "ML URL:"$url
-#sudo bash -c 'echo "deb http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64 /" > /etc/apt/sources.list.d/cuda_learn.list'
-#sudo bash -c 'echo "deb http://developer.download.nvidia.com/compute/machine-learning/repos/"$os_name$os_version"/x86_64 /" > /etc/apt/sources.list.d/cuda_learn.list'
 sudo bash -c "echo deb "$url" / > /etc/apt/sources.list.d/cuda_learn.list"
 
 #Call update to refresh package list
