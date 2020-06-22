@@ -54,8 +54,6 @@ then
 	if [[ $ngrok_installed == 0 ]]
 	then
 		echo "ngrok seems to be working. Proceeding with Proxy start."
-		#Start proxy
-		#./ngrok http -bind-tls=true -inspect=false  --log=ngrok.log http://localhost:8080 &
 		NGROK_RUNNING_PID=$(ps aux | grep ngrok | grep http | grep -v "grep" | grep -v "ngrok_proxy.sh"  | awk -F " " '{print $2}')
 		if [[ -n $NGROK_RUNNING_PID ]]
 		then
@@ -71,12 +69,13 @@ then
 		else
 			echo "No PID found for ngrok."
 		fi
+		echo "Proceeding with Proxy start."
+		#Start proxy
 		nohup $BASE_DIR/ngrok/ngrok http -bind-tls=true -inspect=false --log=stdout $URL_TO_EXPOSE > $BASE_DIR/ngrok/ngrok.log 2>&1 &
 		sleep 10
-		#cat $BASE_DIR/ngrok/ngrok.log
-		#ps aux
 		EXTERNAL_URL=$(cat $BASE_DIR/ngrok/ngrok.log | awk -F "url=" '{print $2}' | awk -F " " '{print $1}')
 		echo "External URL: " $EXTERNAL_URL
+		#Save the URL to a file so that it could be read from docker host
 		echo $EXTERNAL_URL > EXTERNAL_URL.txt
 	else
 		echo "Unable to install ngrok. Exiting."
@@ -93,22 +92,27 @@ else
 		if [[ $killed == 0 ]]
 		then
 			echo "Process terminated."
+			echo "Proceeding with Proxy start."
+			#Start proxy
+			nohup $BASE_DIR/ngrok/ngrok http -bind-tls=true -inspect=false --log=stdout $URL_TO_EXPOSE > $BASE_DIR/ngrok/ngrok.log 2>&1 &
+			sleep 10
+			EXTERNAL_URL=$(cat $BASE_DIR/ngrok/ngrok.log | awk -F "url=" '{print $2}' | awk -F " " '{print $1}')
+			echo "External URL: " $EXTERNAL_URL
+			echo $EXTERNAL_URL > $BASE_DIR/ngrok/EXTERNAL_URL.txt
 		else
 			echo "Unable to kill the process."
-			#exit 1
+			exit 1
 		fi
 	else
 		echo "No PID found for ngrok."
+		echo "Proceeding with Proxy start."
+		#Start proxy
+		nohup $BASE_DIR/ngrok/ngrok http -bind-tls=true -inspect=false --log=stdout $URL_TO_EXPOSE > $BASE_DIR/ngrok/ngrok.log 2>&1 &
+		sleep 10
+		EXTERNAL_URL=$(cat $BASE_DIR/ngrok/ngrok.log | awk -F "url=" '{print $2}' | awk -F " " '{print $1}')
+		echo "External URL: " $EXTERNAL_URL
+		echo $EXTERNAL_URL > $BASE_DIR/ngrok/EXTERNAL_URL.txt
 	fi
-	echo "Proceeding with Proxy start."
-	#Start proxy
-	#./ngrok http -bind-tls=true -inspect=false  --log=stdout http://localhost:8080 > /dev/null &
-	nohup $BASE_DIR/ngrok/ngrok http -bind-tls=true -inspect=false --log=stdout $URL_TO_EXPOSE > $BASE_DIR/ngrok/ngrok.log 2>&1 &
-	sleep 10
-	#cat $BASE_DIR/ngrok/ngrok.log
-	#ps aux
-	EXTERNAL_URL=$(cat $BASE_DIR/ngrok/ngrok.log | awk -F "url=" '{print $2}' | awk -F " " '{print $1}')
-	echo "External URL: " $EXTERNAL_URL
-	echo $EXTERNAL_URL > $BASE_DIR/ngrok/EXTERNAL_URL.txt
+	
 fi
 
