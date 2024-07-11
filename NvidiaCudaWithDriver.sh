@@ -53,37 +53,37 @@ sudo apt update
 sudo apt install $default_ppa_driver_version -y
 
 #Add public key of the repo
-url="http://developer.download.nvidia.com/compute/cuda/repos/$os_name$os_version/x86_64/3bf863cc.pub"
+url="https://developer.download.nvidia.com/compute/cuda/repos/$os_name$os_version/x86_64/3bf863cc.pub"
 if wget -S $url >/dev/null 2>&1; then
 	echo "Url : Public Key URL ($url) exists..."
 else
 	echo "Url : $url doesn't exist."
-	url="http://developer.download.nvidia.com/compute/cuda/repos/$default_os_name$default_os_version/x86_64/3bf863cc.pub"
+	url="https://developer.download.nvidia.com/compute/cuda/repos/$default_os_name$default_os_version/x86_64/3bf863cc.pub"
 	echo "Url : Falling to default:"$url
 fi
 echo "Key URL:"$url
 sudo apt-key adv --fetch-keys $url
 
 #Add cuda repo to cuda.list
-url="http://developer.download.nvidia.com/compute/cuda/repos/"$os_name$os_version"/x86_64/"
+url="https://developer.download.nvidia.com/compute/cuda/repos/"$os_name$os_version"/x86_64/"
 
 if wget -S $url>/dev/null 2>&1; then
 	echo "Url : CUDA URL ($url) exists..."
 else
 	echo "Url : $url doesn't exist."
-	url="http://developer.download.nvidia.com/compute/cuda/repos/"$default_os_name$default_os_version"/x86_64/"
+	url="https://developer.download.nvidia.com/compute/cuda/repos/"$default_os_name$default_os_version"/x86_64/"
 	echo "Url : Falling to default:"$url
 fi
 echo "CUDA URL:"$url
 sudo bash -c "echo deb "$url" / > /etc/apt/sources.list.d/cuda.list"
 
 #Add machine learning repo to cuda_learn.list
-url="http://developer.download.nvidia.com/compute/machine-learning/repos/"$os_name$os_version"/x86_64/"
+url="https://developer.download.nvidia.com/compute/machine-learning/repos/"$os_name$os_version"/x86_64/"
 if wget -S $url >/dev/null 2>&1; then
 	echo "Url : ML URL ($url) exists..."
 else
 	echo "Url : $url doesn't exist."
-	url="http://developer.download.nvidia.com/compute/machine-learning/repos/"$default_os_name$default_os_version"/x86_64/"
+	url="https://developer.download.nvidia.com/compute/machine-learning/repos/"$default_os_name$default_os_version"/x86_64/"
 	echo "Url : Falling to default:"$url
 fi
 echo "ML URL:"$url
