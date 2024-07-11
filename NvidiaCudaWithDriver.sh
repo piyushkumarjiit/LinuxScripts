@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #Abort installation if any of the commands fail
-set -e
+#set -e
 
 #This script uses PPA repo for proprietory NVIDIA drivers. In case of other OS-Version combo, please update the default values with valid values and script should work as expected.
 
