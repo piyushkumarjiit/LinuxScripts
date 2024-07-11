@@ -7,8 +7,8 @@
 
 #Update the default OS and Version based on availability on "http://developer.download.nvidia.com/compute/cuda/repos/" and "http://developer.download.nvidia.com/compute/machine-learning/repos"
 default_os_name="ubuntu"
-default_os_version="1804"
-default_ppa_driver_version="nvidia-driver-440"
+default_os_version="2404"
+default_ppa_driver_version="nvidia-driver-535"
 default_cuda_version="cuda-10-1"
 deafult_libcudn_version="libcudnn7"
 
